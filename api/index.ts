@@ -1,5 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { sql } from '../lib/db';
+import { neon } from '@neondatabase/serverless';
+
+if (!process.env.DATABASE_URL) {
+  console.error('DATABASE_URL not configured');
+  throw new Error('DATABASE_URL not configured');
+}
+
+const sql = neon(process.env.DATABASE_URL);
 
 function setCors(res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
