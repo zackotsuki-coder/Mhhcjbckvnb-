@@ -100,14 +100,25 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip
 
-type ChartTooltipContentProps = React.ComponentProps<
-  typeof RechartsPrimitive.Tooltip
-> &
+type ChartTooltipContentProps = RechartsPrimitive.TooltipProps &
   React.ComponentProps<"div"> & {
+    payload?: readonly ChartTooltipPayloadItem[]
     hideLabel?: boolean
     hideIndicator?: boolean
     indicator?: "line" | "dot" | "dashed"
     nameKey?: string
+    label?: React.ReactNode
+    labelFormatter?: (
+      label: React.ReactNode,
+      payload: readonly ChartTooltipPayloadItem[]
+    ) => React.ReactNode
+    formatter?: (
+      value: string | number | undefined,
+      name: string | undefined,
+      item: ChartTooltipPayloadItem,
+      index: number,
+      payload: readonly ChartTooltipPayloadItem[]
+    ) => React.ReactNode
     labelKey?: string
   }
 
@@ -201,7 +212,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
                   )}
                 >
                   {formatter && item?.value !== undefined && item.name ? (
-                    formatter(item.value, item.name, item, index, item.payload)
+                    formatter(item.value, item.name, item, index, payload)
                   ) : (
                     <>
                       {itemConfig?.icon ? (
